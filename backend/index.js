@@ -7,7 +7,12 @@ import router from './router/route.js';
 dotenv.config()
 const app = express();
 const port = process.env.PORT || 3000
-app.use(cors())                     
+// app.use(cors({
+//     origin: `https://balance-buddy.onrender.com`, // or '*' for all domains, or specify multiple domains
+//     credentials: true,
+// }));      
+
+app.use(cors())
 app.use(express.json())  
 app.use('/data',router)
 
