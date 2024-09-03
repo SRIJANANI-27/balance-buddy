@@ -7,7 +7,13 @@ const schema = new mongoose.Schema({
     },
     description:{
         type: String,
+        enum: ['Salary','Food','Rent','Shopping','Medicine'],
         required: true
+    },
+    reason:{
+        type: String,
+        required:true
+        
     },
     amount:{
         type: Number,

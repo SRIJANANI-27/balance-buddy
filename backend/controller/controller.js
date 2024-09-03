@@ -60,29 +60,45 @@ export const getalldata = async (req, res, next) => {
 };
 
 // Add new data
+
+
 export const adddata = async (req, res) => {
-    const { title, description, amount, date, startdate, enddate } = req.body;
+    const { title, description, amount, date, startdate, enddate, reason } = req.body;
 
-    // Convert date string to Date object
-    const formattedDate = new Date(date);
-
-    const newdata = new Tracker({
-        title,
-        description,
-        amount,
-        date: formattedDate,
-        startdate, 
-        enddate
-    });
-
-    try {
-        await newdata.save();
-    } catch (err) {
-        console.log(err);
+    // Validate required fields
+    if (!title || !amount || !date) {
+        return res.status(400).json({ error: 'Title, amount, and date are required' });
     }
 
-    return res.status(201).json({ newdata });
+    try {
+        // Convert date string to Date object if it's valid
+        const formattedDate = new Date(date);
+        if (isNaN(formattedDate.getTime())) {
+            return res.status(400).json({ error: 'Invalid date format' });
+        }
+
+        // Create new Tracker instance
+        const newdata = new Tracker({
+            title,
+            description,
+            amount,
+            date: formattedDate,
+            startdate: startdate ? new Date(startdate) : null, // Convert startdate if provided
+            enddate: enddate ? new Date(enddate) : null,       // Convert enddate if provided
+            reason
+        });
+
+        // Save the data
+        const savedData = await newdata.save();
+
+        // Respond with success
+        return res.status(201).json({ newdata: savedData });
+    } catch (err) {
+        console.error('Error saving data:', err); // Log the error
+        return res.status(500).json({ error: 'An error occurred while saving the data' });
+    }
 };
+
 
 // Delete data by ID
 export const deletedata = async (req, res) => {
@@ -105,7 +121,7 @@ export const deletedata = async (req, res) => {
 // Update data by ID
 export const updatedata = async (req, res) => {
     let data;
-    const { title, description, date, amount } = req.body;
+    const { title, description, date, amount, reason } = req.body;
     let id = req.params.id;
 
     // Convert date string to Date object
@@ -116,7 +132,8 @@ export const updatedata = async (req, res) => {
             title,
             description,
             amount,
-            date: formattedDate // Use the formatted Date object
+            date: formattedDate,// Use the formatted Date object
+            reason
         });
     } catch (err) {
         console.log(err);
