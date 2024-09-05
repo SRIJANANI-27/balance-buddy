@@ -740,7 +740,7 @@ const Table = ({ transactions, setFormData, setEditingData }) => {
                   }
                   className="ml-2 text-gray-600 focus:outline-none"
                 >
-                  {sortOrder === "asc" ? "▲" : "▼"}
+                  {sortOrder === "asc" ? "▴" : "▾"}
                 </button>
               </th>
               <th className="relative px-4 py-2 text-center text-gray-600">
@@ -813,7 +813,7 @@ const Table = ({ transactions, setFormData, setEditingData }) => {
                         <td className="px-4 py-2">{transaction.title}</td>
                         <td className="px-4 py-2">
                           {transaction.description}
-                          {transaction.reason ? ` - ${transaction.reason}` : ""}
+                          {/* {transaction.reason ? ` - ${transaction.reason}` : ""} */}
                         </td>
                         <td className="px-4 py-2">
                           {new Date(transaction.date).toLocaleDateString(

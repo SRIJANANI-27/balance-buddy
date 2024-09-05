@@ -755,7 +755,6 @@ function Forms({
             <option value="Utilities">💡 Utilities</option>
             <option value="Transportation">🚗 Transportation</option>
             <option value="Education">📚 Education</option>
-            <option value="Travel">✈️ Travel</option>
             <option value="Transportation">🚉 Transportation</option>
             <option value="other">✏️ Other (Specify)</option>
           </select>

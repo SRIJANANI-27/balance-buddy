@@ -2,9 +2,7 @@ import React from 'react';
 
 function Labels({ data }) {
 
-//   const formatNumber = (num) => {
-//     return num.toLocaleString("en-IN", { maximumFractionDigits: 2 });
-//   };
+ 
 
   return (
     <div>
