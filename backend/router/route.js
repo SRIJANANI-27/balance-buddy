@@ -1,17 +1,31 @@
-import express from "express";
-import { adddata, deletedata, getalldata, getFilteredData, getuser, login, register, updatedata } from "../controller/controller.js";
-
+import express from 'express';
+import { addData, deleteData, getFilteredData, getuser, login, register, resetpassword, updateData } from '../controller/controller.js';
+// import { authenticateUser } from '../controller/controller.js'; // Import authenticateUser middleware
 
 const router = express.Router();
 
-router.get('/',getFilteredData)
-router.post('/',adddata)
-router.delete('/:id',deletedata)
-router.put('/:id',updatedata)
+// // Public routes
+router.post('/login', login);
+router.post('/register', register);
+router.get('/users', getuser);
 
+// Protected routes
+// router.use(authenticateUser);
 
-router.post('/login',login);
-router.post('/register',register);
-router.get('/users',getuser)
+router.get('/', getFilteredData);
+router.post('/', addData);
+router.delete('/:id', deleteData);
+router.put('/:id', updateData);
+
+router.post('/reset',resetpassword);
+
+// router.post('/login', login);
+// router.post('/register', register);
+// router.get('/users', getUsers);
+
+// router.get('/', getFilteredData);
+// router.post('/', addData);
+// router.delete('/:id', deleteData);
+// router.put('/:id', updateData);
 
 export default router;

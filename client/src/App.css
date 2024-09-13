@@ -51,4 +51,18 @@
     transform: translate(-50%, -50%);
     z-index: 9999; /* Ensure it's above other content */
   }
+  /* Ensure the table container is scrollable and fits within the defined height */
+.table-container {
+    height: 80vh; /* Adjust height as needed */
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  
+  /* Styles for pagination controls */
+  .pagination-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+  }
   

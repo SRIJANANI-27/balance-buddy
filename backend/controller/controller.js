@@ -1,7 +1,7 @@
 import { Tracker } from "../model/model.js";
 import { User } from "../model/model.js";
 import bcrypt from 'bcryptjs'
-// Get all data
+
 
 
 // Get filtered data based on date range
@@ -35,8 +35,31 @@ export const getFilteredData = async (req, res) => {
     }
 };
 
+// export const getFilteredData = async (req, res) => {
+//   const { userId } = req.query; // Get userId from query params
+//   let data;
+//   try {
+//       data = await Tracker.find({ userId }); // Filter by userId
+//   } catch (err) {
+//       console.log(err);
+//   }
 
-export const getalldata = async (req, res, next) => {
+//   if (!data) {
+//       return res.status(400).json({ message: "No data found" });
+//   }
+
+//   const formattedData = data.map(item => ({
+//       ...item._doc,
+//       date: item.date.toISOString().split('T')[0]
+//   }));
+
+//   return res.status(200).json({
+//       count: data.length,
+//       data: formattedData
+//   });
+// };
+
+export const getallData = async (req, res, next) => {
     let data;
     try {
         data = await Tracker.find();
@@ -63,7 +86,7 @@ export const getalldata = async (req, res, next) => {
 // Add new data
 
 
-export const adddata = async (req, res) => {
+export const addData = async (req, res) => {
     const { title, description, amount, date, startdate, enddate, reason } = req.body;
 
     // Validate required fields
@@ -86,7 +109,8 @@ export const adddata = async (req, res) => {
             date: formattedDate,
             startdate: startdate ? new Date(startdate) : null, // Convert startdate if provided
             enddate: enddate ? new Date(enddate) : null,       // Convert enddate if provided
-            reason
+            reason,
+            // userId: req.user._id
         });
 
         // Save the data
@@ -102,7 +126,7 @@ export const adddata = async (req, res) => {
 
 
 // Delete data by ID
-export const deletedata = async (req, res) => {
+export const deleteData = async (req, res) => {
     let data;
     let id = req.params.id;
 
@@ -120,7 +144,7 @@ export const deletedata = async (req, res) => {
 };
 
 // Update data by ID
-export const updatedata = async (req, res) => {
+export const updateData = async (req, res) => {
     let data;
     const { title, description, date, amount, reason } = req.body;
     let id = req.params.id;
@@ -241,3 +265,21 @@ export const login = async (req, res, next) => {
        count: userExists.length, userExists
   })
  } 
+ 
+ export const resetpassword = async (req, res, next) => {
+  const { email, newPassword } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: 'No user registered with this email.' });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    await user.save();
+
+    res.status(200).json({ message: 'Password reset successful' });
+  } catch (error) {
+    res.status(500).json({ message: 'An error occurred while resetting the password.' });
+  }
+};

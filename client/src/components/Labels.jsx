@@ -22,9 +22,9 @@ function LabelComp({ data }) {
           className="w-2 h-2 rounded py-3"
           style={{ background: data.color ?? '#f9c74f' }}
         ></div>
-        <h3 className="text-md font-semibold text-shadow-md">{data.type ?? ''}</h3>
+        <h5 className="text-md font-semibold text-shadow-md">{data.type ?? ''}</h5>
       </div>
-      <h3 className="font-bold">₹ {data.percent ?? 0}</h3>
+      <h5 className="font-bold">₹ {data.percent ?? 0}</h5>
     </div>
   );
 }

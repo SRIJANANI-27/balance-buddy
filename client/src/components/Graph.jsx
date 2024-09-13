@@ -16,16 +16,16 @@ function Graph({ transactions }) {
     },
     { income: 0, expense: 0 }
   );
-  // const formatNumber = (num) => {
-  //   return num.toLocaleString("en-IN", { maximumFractionDigits: 2 });
-  // };
+  const formatNumber = (num) => {
+    return num.toLocaleString("en-IN", { maximumFractionDigits: 2 });
+  };
   
   const netTotal = totals.income - totals.expense;
   const totalAmount = totals.income + totals.expense;
 
-  const incomePercent = totals.income
-const expensePercent = totals.expense
-const netTotalPercent =  totalAmount
+  const incomePercent = formatNumber(totals.income)
+const expensePercent = formatNumber(totals.expense)
+const netTotalPercent =  formatNumber(netTotal)
 
 
   const config = {
