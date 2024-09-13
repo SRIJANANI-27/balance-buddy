@@ -1,5 +1,6 @@
 import { Tracker } from "../model/model.js";
-
+import { User } from "../model/model.js";
+import bcrypt from 'bcryptjs'
 // Get all data
 
 
@@ -145,3 +146,98 @@ export const updatedata = async (req, res) => {
 
     return res.status(200).json({ message: "Updated successfully" });
 };
+
+
+export const login = async (req, res, next) => {
+    const { email, password } = req.body;
+  
+    let user;
+    try {
+      user = await User.findOne({ email });
+    } catch (error) {
+      console.log(error);
+      
+    }
+  
+    if (!user) {
+      return res.status(404).json({ message: 'No user registered' });
+    }
+  
+    let isPasswordValid;
+    try {
+      isPasswordValid = await bcrypt.compare(password, user.password);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ message: 'Error comparing passwords' });
+    }
+  
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: 'Wrong password' });
+    }
+  
+    return res.status(200).json({ message: 'Login successful', user });
+  };
+
+  export const register = async (req, res) => {
+    const { name, email, password, dob } = req.body;
+  
+    // Validate the date format
+    const parsedDob = new Date(dob);
+    if (isNaN(parsedDob.getTime())) { // Check if the date is invalid
+      return res.status(400).json({ message: 'Invalid date format. Use YYYY-MM-DD.' });
+    }
+  
+    let userExists;
+    try {
+      userExists = await User.findOne({ email });
+      if (userExists) {
+        return res.status(400).json({ message: 'User already exists', userExists });
+      }
+    } catch (error) {
+      console.error('Error checking if user exists:', error);
+      return res.status(500).json({ message: 'Server error while checking user existence' });
+    }
+  
+    let hashedPassword;
+    try {
+      hashedPassword = await bcrypt.hash(password, 10);
+    } catch (error) {
+      console.error('Error hashing password:', error);
+      return res.status(500).json({ message: 'Server error while hashing password' });
+    }
+  
+    const newUser = new User({
+      name,
+      email,
+      password: hashedPassword,
+      dob: parsedDob, // Ensure the date is a valid Date object
+    });
+  
+    try {
+      await newUser.save();
+    } catch (error) {
+      console.error('Error saving user:', error);
+      return res.status(500).json({ message: 'Server error while saving user' });
+    }
+  
+    return res.status(201).json({ message: 'User registered successfully' });
+  };
+
+
+
+  export const getuser = async (req, res, next) => {
+    let userExists;
+    try {
+      userExists = await User.find();
+    } catch (err) {
+      console.log(err);
+    }
+    if (!userExists)
+    {
+         return res.status(400).json({message : "no user found"})
+     }
+     return res.status(200).json(
+   {
+       count: userExists.length, userExists
+  })
+ } 

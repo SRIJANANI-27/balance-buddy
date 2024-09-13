@@ -23,9 +23,32 @@ const schema = new mongoose.Schema({
         type:Date,
         required: true
     },
+    
+
 },
     {
         timestamps:true,
     }
 )
 export const Tracker = mongoose.model("Tracker",schema)   
+
+const userschema=new mongoose.Schema({    
+    name:{
+        type:String,
+        required:true,
+    },
+    password:{
+        type:String,
+        required:true
+    },
+    email:{
+        type:String,
+        required:true,
+        unique:true
+    },
+    dob:{
+        type:Date,
+        required:true
+    }
+});
+export const User = mongoose.model("User",userschema)
