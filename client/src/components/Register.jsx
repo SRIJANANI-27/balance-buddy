@@ -22,7 +22,7 @@ function Register({ setIsAuthenticated }) {
     }
 
     try {
-      const res = await axios.post(`${baseurl}/register`, {
+      const res = await axios.post(`${baseurl}/data/register`, {
         name,
         email,
         dob,

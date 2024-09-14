@@ -12,10 +12,10 @@ router.get('/users', getuser);
 // Protected routes
 // router.use(authenticateUser);
 
-router.get('/data', getFilteredData);
-router.post('/data', addData);
-router.delete('/data/:id', deleteData);
-router.put('/data/:id', updateData);
+router.get('/', getFilteredData);
+router.post('/', addData);
+router.delete('/:id', deleteData);
+router.put('/:id', updateData);
 
 router.post('/reset',resetpassword);
 
