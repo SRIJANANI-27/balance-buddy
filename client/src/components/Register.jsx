@@ -29,7 +29,7 @@ function Register({ setIsAuthenticated }) {
         password,
       });
       setMessage(res.data.message);
-      if (res.status === 200 || res.status === 201) { // Status check (200: OK, 201: Created)
+      if (res.status === 200 ) { // Status check (200: OK, 201: Created)
         localStorage.setItem("userName", name);
         localStorage.setItem("userEmail", email);
         localStorage.setItem("userDob", dob);
