@@ -22,14 +22,14 @@ function Register({ setIsAuthenticated }) {
     }
 
     try {
-      const res = await axios.post(`${baseurl}/data/register`, {
+      const res = await axios.post(`${baseurl}/register`, {
         name,
         email,
         dob,
         password,
       });
       setMessage(res.data.message);
-      if (res.status === 200) {
+      if (res.status === 200 || res.status === 201) { // Status check (200: OK, 201: Created)
         localStorage.setItem("userName", name);
         localStorage.setItem("userEmail", email);
         localStorage.setItem("userDob", dob);
@@ -37,7 +37,12 @@ function Register({ setIsAuthenticated }) {
         navigate("/");
       }
     } catch (err) {
-      setMessage(err.response?.data?.message || "Registration failed");
+      // Improved error handling for 404 or other errors
+      if (err.response?.status === 404) {
+        setMessage("Registration endpoint not found. Check the API URL.");
+      } else {
+        setMessage(err.response?.data?.message || "Registration failed");
+      }
     }
   };
 

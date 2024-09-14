@@ -16,7 +16,7 @@ function Login({ handleAuth }) {
 
   const handleSubmit = async () => {
     try {
-      const res = await axios.post(`${baseurl}/data/login`, { email, password });
+      const res = await axios.post(`${baseurl}/login`, { email, password });
       setMessage(res.data.message);
       if (res.status === 200) {
         localStorage.setItem("currentUser", JSON.stringify(res.data.user));

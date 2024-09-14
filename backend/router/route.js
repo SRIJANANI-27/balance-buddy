@@ -12,20 +12,13 @@ router.get('/users', getuser);
 // Protected routes
 // router.use(authenticateUser);
 
-router.get('/', getFilteredData);
-router.post('/', addData);
-router.delete('/:id', deleteData);
-router.put('/:id', updateData);
+router.get('/data', getFilteredData);
+router.post('/data', addData);
+router.delete('/data/:id', deleteData);
+router.put('/data/:id', updateData);
 
 router.post('/reset',resetpassword);
 
-// router.post('/login', login);
-// router.post('/register', register);
-// router.get('/users', getUsers);
 
-// router.get('/', getFilteredData);
-// router.post('/', addData);
-// router.delete('/:id', deleteData);
-// router.put('/:id', updateData);
 
 export default router;
