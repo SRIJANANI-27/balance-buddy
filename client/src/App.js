@@ -8,7 +8,7 @@ import Register from './components/Register';
 import { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { baseurl } from './url';
-import Navbar from './components/Navbar'; // Import the Navbar component
+import Navbar from './components/Navbar'; 
 
 function useAuth() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -17,11 +17,17 @@ function useAuth() {
   useEffect(() => {
     const storedUser = localStorage.getItem('currentUser');
     if (storedUser) {
-      const user = JSON.parse(storedUser);
-      setIsAuthenticated(true);
-      setCurrentUser(user);
+      try {
+        const user = JSON.parse(storedUser);
+        setIsAuthenticated(true);
+        setCurrentUser(user);
+      } catch (error) {
+        console.error("Error parsing stored user:", error);
+        localStorage.removeItem('currentUser'); // Remove corrupted data if it can't be parsed
+      }
     }
   }, []);
+  
 
   const login = (user) => {
     setIsAuthenticated(true);
@@ -92,10 +98,10 @@ function App() {
       <Navbar currentUser={currentUser} logout={logout} /> {/* Add Navbar component */}
       <div className="container mx-auto max-w-6xl text-center drop-shadow-lg ">
         <Routes>
-          <Route path="/login" element={<Login handleAuth={login} />} />
+          <Route path="/" element={<Login handleAuth={login} />} />
           <Route path="/register" element={<Register handleAuth={login} />} />
           <Route
-            path="/"
+            path="/home"
             element={
               <div>
                 <div className="grid md:grid-cols-2 gap-4 mt-10">

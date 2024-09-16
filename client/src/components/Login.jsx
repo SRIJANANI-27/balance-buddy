@@ -21,7 +21,7 @@ function Login({ handleAuth }) {
       if (res.status === 200) {
         localStorage.setItem("currentUser", JSON.stringify(res.data.user));
         handleAuth(res.data.user, true);
-        navigate("/");
+        navigate("/home");
       }
     } catch (err) {
       console.error(err);

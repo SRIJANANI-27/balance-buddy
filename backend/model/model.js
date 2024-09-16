@@ -22,7 +22,7 @@ const schema = new mongoose.Schema({
     date:{
         type:Date,
         required: true
-    },
+    }
     // userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
 
 },

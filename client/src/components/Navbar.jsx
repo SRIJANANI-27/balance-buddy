@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function Navbar({ currentUser, logout }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const navigate = useNavigate(); // Get the navigate function from useNavigate
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleLogout = () => {
+    logout(); // Call the logout function passed as a prop
+    navigate('/login'); // Redirect to the login page
   };
 
   return (
@@ -35,6 +41,8 @@ function Navbar({ currentUser, logout }) {
           <div className="relative">
             <button 
               onClick={toggleDropdown} 
+              aria-haspopup="true"
+              aria-expanded={isDropdownOpen}
               className="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded flex items-center"
             >
               <span className="mr-2">Welcome, {currentUser.name}!</span>
@@ -54,9 +62,13 @@ function Navbar({ currentUser, logout }) {
               </svg>
             </button>
             {isDropdownOpen && (
-              <div className="absolute right-0 mt-2 bg-white text-black shadow-lg rounded">
+              <div 
+                className="absolute right-0 mt-2 bg-white text-black shadow-lg rounded"
+                role="menu"
+                aria-orientation="vertical"
+              >
                 <button 
-                  onClick={logout} 
+                  onClick={handleLogout} 
                   className="block w-full px-4 py-2 text-left hover:bg-gray-200 rounded"
                 >
                   Logout

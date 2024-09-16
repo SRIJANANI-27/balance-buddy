@@ -10,13 +10,21 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // CORS Configuration
-app.use(cors())
-app.use(session({
+app.use(cors({
+    origin: ['http://localhost:3000', 'https://balance-buddy.onrender.com'],
+    credentials: true, // Add your frontend domain here
+  }));
+  app.use(session({
     secret: 'your-secret-key',
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false } // Set to true if using HTTPS
-}));     
+    cookie: { 
+      secure: process.env.NODE_ENV === 'production',  // Secure cookies only in production (HTTPS)
+      httpOnly: true,  // Protect against cross-site scripting (XSS)
+      sameSite: 'lax'  // Protect against cross-site request forgery (CSRF)
+    }
+  }));
+    
 
 app.use(express.json());  
 
