@@ -25,7 +25,7 @@ function Navbar({ currentUser, logout }) {
 
       {/* Navigation Links */}
       <div className="space-x-4 flex items-center">
-        <Link to="/" className="text-white hover:bg-slate-700 px-4 py-2 rounded">
+        <Link to="/home" className="text-white hover:bg-slate-700 px-4 py-2 rounded">
           Home
         </Link>
         {!currentUser ? (

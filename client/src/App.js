@@ -8,7 +8,7 @@ import Register from './components/Register';
 import { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { baseurl } from './url';
-import Navbar from './components/Navbar'; 
+import Navbar from './components/Navbar';
 
 function useAuth() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -27,13 +27,14 @@ function useAuth() {
       }
     }
   }, []);
-  
 
-  const login = (user) => {
+  const login = (user, token) => {
     setIsAuthenticated(true);
     setCurrentUser(user);
     localStorage.setItem('currentUser', JSON.stringify(user));
+    localStorage.setItem('token', token); // Store the token
   };
+  
 
   const logout = () => {
     setIsAuthenticated(false);
@@ -57,23 +58,28 @@ function App() {
   const { isAuthenticated, currentUser, login, logout } = useAuth();
   const formsRef = useRef(null);
 
-  // Define the fetchTransactions function
+  // Fetch user-specific transactions
   const fetchTransactions = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) return; // Early return if no token
+  
     try {
       const res = await axios.get(`${baseurl}/data`, {
-        params: { userId: currentUser._id },
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
       });
-      console.log(res.data); // Log response data to inspect the structure
-      setTransactions(res.data.data);
+      setTransactions(res.data.data); // Assuming your API returns data in this structure
     } catch (err) {
       console.error('Error fetching transactions:', err);
     }
   };
+  
 
   // Fetch transactions when authenticated
   useEffect(() => {
     if (isAuthenticated && currentUser) {
-      fetchTransactions();
+      fetchTransactions(); // Fetch transactions for the logged-in user
     }
   }, [isAuthenticated, currentUser]);
 
@@ -98,32 +104,46 @@ function App() {
       <Navbar currentUser={currentUser} logout={logout} /> {/* Add Navbar component */}
       <div className="container mx-auto max-w-6xl text-center drop-shadow-lg ">
         <Routes>
-          <Route path="/" element={<Login handleAuth={login} />} />
-          <Route path="/register" element={<Register handleAuth={login} />} />
+          <Route
+            path="/"
+            element={
+              isAuthenticated ? <Navigate to="/home" /> : <Login handleAuth={login} />
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              isAuthenticated ? <Navigate to="/home" /> : <Register handleAuth={login} />
+            }
+          />
           <Route
             path="/home"
             element={
-              <div>
-                <div className="grid md:grid-cols-2 gap-4 mt-10">
-                  <Graph transactions={transactions} />
-                  <div ref={formsRef}>
-                    {isAuthenticated && (
-                      <Forms
-                        editingData={editingData}
-                        setEditingData={setEditingData}
-                        formData={formData}
-                        setFormData={setFormData}
-                        handleChange={handleChange}
-                      />
-                    )}
+              isAuthenticated ? (
+                <div>
+                  <div className="grid md:grid-cols-2 gap-4 mt-10">
+                    <Graph transactions={transactions} />
+                    <div ref={formsRef}>
+                      {isAuthenticated && (
+                        <Forms
+                          editingData={editingData}
+                          setEditingData={setEditingData}
+                          formData={formData}
+                          setFormData={setFormData}
+                          handleChange={handleChange}
+                        />
+                      )}
+                    </div>
                   </div>
+                  <Table
+                    transactions={transactions}
+                    setFormData={setFormData}
+                    setEditingData={setEditingData}
+                  />
                 </div>
-                <Table
-                  transactions={transactions}
-                  setFormData={setFormData}
-                  setEditingData={setEditingData}
-                />
-              </div>
+              ) : (
+                <Navigate to="/" />
+              )
             }
           />
           <Route path="*" element={<Navigate to="/" />} />

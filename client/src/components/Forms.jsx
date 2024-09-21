@@ -80,14 +80,22 @@ function Forms({
     };
 
     try {
+      const token = localStorage.getItem('token');
       if (editingData) {
+        
         await axios.put(`${baseurl}/data/${editingData}`, data);
         alert("🔥 Updated successfully!");
 
         // Optionally perform navigation or any other action after alert closes
         setTimeout(() => navigate(0), 10);
       } else {
-        await axios.post(`${baseurl}/data`, data);
+        await axios.post(`${baseurl}/data`, data, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+      
         alert("✅ Transaction added successfully!");
 
         // Optionally perform navigation or any other action after alert closes
